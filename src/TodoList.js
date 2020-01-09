@@ -5,26 +5,23 @@ import firebaseApp from './firebase';
 export default class TodoList extends Component {
   constructor() {
     super();
-    this.state = {
-      tasks: []
-    }
+    this.state = { tasks: [] }
     this.tasksRef = firebaseApp.database().ref().child('tasks');
-    console.log("Contructor:::", this.tasksRef)
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.listenForTasks(this.tasksRef);
   }
 
   listenForTasks(tasksRef) {
-    
     tasksRef.on('value', snap => {
       let tasks = [];
-
+      
       snap.forEach((child) => {
-        tasks.push(
-          child.val().body,
-        );
+        tasks.push({
+          body: child.val().body,
+          id: child.key
+        });
       });
       
       this.setState({
@@ -35,13 +32,14 @@ export default class TodoList extends Component {
 
   render() {
     const { tasks } = this.state;
+    // console.log("STATE::::", this.state)
 
     return(
       <div>
         {
           tasks.map(
             task => {
-              return <TodoItem task={task}/>
+              return <TodoItem task={task} key={task.id} />
             }
           )
         }
