@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 
 export default class TodoItem extends Component {
   render() {
+    const { task } = this.props;
+
     return(
-      <p>{this.props.task}</p>
+      <p> {task} </p>
     )
   }
 }
